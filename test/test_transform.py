@@ -1,19 +1,23 @@
 import chess
 import chess.pgn
 import numpy as np
-from src.my_transform import (bitboard_to_bitvector, to_bitboard, to_chess_neighborhoods, to_fen, to_san,
-                              to_unified_neg_bitboard, to_valued_bitboard, to_white_moving, to_valued_attack_map,
-                              to_valued_defend_map, to_bit_defend_map, to_bit_attack_map)
+
+from src.my_transform import (bitboard_to_bitvector, to_bit_attack_map,
+                              to_bit_defend_map, to_bitboard,
+                              to_chess_neighborhoods, to_fen, to_san,
+                              to_unified_neg_bitboard, to_valued_attack_map,
+                              to_valued_bitboard, to_valued_defend_map,
+                              to_white_moving)
 
 
 def test_bitboard_to_bitvector():
     # prepare
-    with open('./chess_features/test/test_files/expected_valued_bitboard.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_valued_bitboard.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     loaded_bitboard = eval(data)
 
-    with open('./chess_features/test/test_files/expected_valued_vector.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_valued_vector.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     loaded_bitvector = eval(data)
@@ -24,7 +28,7 @@ def test_bitboard_to_bitvector():
 
 
 def test_to_fen():
-    with open("./chess_features/test/test_files/expected_fen.txt", "r", encoding="utf-8") as fen_file:
+    with open("./test/test_files/expected_fen.txt", "r", encoding="utf-8") as fen_file:
         content = fen_file.readline().strip()
         board = chess.Board(content)
         created_fen = to_fen(board)
@@ -36,7 +40,7 @@ def test_to_valued_bitboard():
     bitboard = to_valued_bitboard(board)
 
     # load expected
-    with open('./chess_features/test/test_files/expected_valued_bitboard.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_valued_bitboard.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     loaded_bitboard = eval(data)
@@ -47,7 +51,7 @@ def test_to_valued_bitboard():
 
 
 def test_to_white_moving():
-    with open("./chess_features/test/test_files/expected_fen.txt", "r", encoding="utf-8") as fen_file:
+    with open("./test/test_files/expected_fen.txt", "r", encoding="utf-8") as fen_file:
         content = fen_file.readline().strip()
     board_black_to_move = chess.Board(content.replace("w", "b"))
     board_white_to_move = chess.Board(content)
@@ -63,7 +67,7 @@ def test_to_binary_bitboard():
     bitboard = to_bitboard(board)
 
     # load expected
-    with open('./chess_features/test/test_files/expected_binary_bitboard.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_binary_bitboard.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     loaded_bitboard = eval(data)
@@ -78,7 +82,7 @@ def test_to_unified_bitboard():
     bitboard = to_unified_neg_bitboard(board)
 
     # load expected
-    with open('./chess_features/test/test_files/expected_unified_bitboard.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_unified_bitboard.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     loaded_bitboard = eval(data)
@@ -91,10 +95,10 @@ def test_to_unified_bitboard():
 def test_to_pgn():
     board = chess.Board()
 
-    with open("./chess_features/test/test_files/fisher.pgn", "r", encoding="utf-8") as pgn_file:
+    with open("./test/test_files/fisher.pgn", "r", encoding="utf-8") as pgn_file:
         first_game = chess.pgn.read_game(pgn_file)
 
-    with open("./chess_features/test/test_files/expected_san.txt", "r", encoding="utf-8") as expected_san_file:
+    with open("./test/test_files/expected_san.txt", "r", encoding="utf-8") as expected_san_file:
         expected_san = expected_san_file.read()
 
     node = first_game
@@ -117,7 +121,7 @@ def test_to_bit_attack_map():
     attack_map = to_bit_attack_map(board)
 
     # load expected
-    with open('./chess_features/test/test_files/expected_bit_attack_map.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_bit_attack_map.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     print(data)
@@ -132,7 +136,7 @@ def test_to_bit_defend_map():
     attack_map = to_bit_defend_map(board)
 
     # load expected
-    with open('./chess_features/test/test_files/expected_bit_defend_map.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_bit_defend_map.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     print(data)
@@ -147,7 +151,7 @@ def test_to_valued_attack_map():
     attack_map = to_valued_attack_map(board)
 
     # load expected
-    with open('./chess_features/test/test_files/expected_valued_attack_map.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_valued_attack_map.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     print(data)
@@ -162,7 +166,7 @@ def test_to_valued_defend_map():
     attack_map = to_valued_defend_map(board)
 
     # load expected
-    with open('./chess_features/test/test_files/expected_valued_defend_map.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_valued_defend_map.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     print(data)
@@ -177,12 +181,16 @@ def test_to_chess_neighborhood():
     neighborhood = to_chess_neighborhoods(board)
     assert neighborhood.shape == (64, 17)
 
-    with open('./chess_features/test/test_files/expected_chess_neighborhood.txt', 'r', encoding="utf-8") as f:
+    with open('./test/test_files/expected_chess_neighborhood.txt', 'r', encoding="utf-8") as f:
         data = f.read()
     data = data.replace('array', 'np.array')
     loaded_neighborhood = eval(data)
 
     np.testing.assert_array_equal(neighborhood, loaded_neighborhood)
+
+
+def test_to_stockfish_representation():
+    raise NotImplementedError
 
 
 def test_to_stockfish_representation():

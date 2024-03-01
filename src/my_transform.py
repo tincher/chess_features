@@ -2,8 +2,8 @@ from itertools import product
 
 import chess
 import numpy as np
+
 from src.neighborhood_transform import get_neighborhood
-from src.stockfish_features import *
 
 
 class StockfishExtractor():
@@ -251,4 +251,5 @@ def to_valued_defend_map(board, values=None):
         if black_min_defender >= 0:
             defend_map[5 + black_min_defender, square] = 1
 
+    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
     return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))

@@ -1,22 +1,26 @@
 
-from src.stockfish_features import (non_pawn_material, piece_value_mg, piece_value_eg, psqt_mg, psqt_eg, mobility_area,
-                                    mobility_eg, mobility_mg, pawnless_flank_colored, pawnless_flank, strength_square)
 import chess
+
+from src.stockfish_features import (ExtractNonPawnMaterial, mobility_area,
+                                    mobility_eg, mobility_mg, pawnless_flank,
+                                    pawnless_flank_colored, piece_value_eg,
+                                    piece_value_mg, psqt_eg, psqt_mg,
+                                    strength_square)
 
 
 def test_non_pawn_material_starting_position():
     board = chess.Board()
-    assert non_pawn_material(board) == 0
+    assert ExtractNonPawnMaterial.extract_feature(board, is_midgame=True, color=chess.WHITE) == 0
 
 
 def test_non_pawn_material_no_queen():
     board = chess.Board("rnbqkbnr/pppppppp/8/8/8/8/PP2PPPP/RNB1KBNR b KQkq - 1 1")
-    assert non_pawn_material(board) == -2538
+    assert ExtractNonPawnMaterial.extract_feature(board, is_midgame=True, color=chess.WHITE) == -2538
 
 
 def test_non_pawn_material_random_position():
     board = chess.Board("r1bqk1n1/pppppppp/8/8/8/8/PP2PPPP/RNB1KBNR b KQkq - 1 1")
-    assert non_pawn_material(board) == 344
+    assert ExtractNonPawnMaterial.extract_feature(board, is_midgame=True, color=chess.WHITE) == 344
 
 
 def test_piece_value_mg_starting_position():
@@ -221,6 +225,11 @@ def test_strength_square_random_position_with_pins():
 
 def test_strength_square_endgame():
     board = chess.Board("1k6/4pp1p/8/8/4B3/8/4PP1P/5K2 w - - 2 2")
+    assert strength_square(board) == 0
+
+
+def test_strength_square_endgame_2():
+    board = chess.Board("6k1/4pp1p/8/8/4B3/8/4PP1P/1K6 w - - 2 2")
     assert strength_square(board) == 0
 
 

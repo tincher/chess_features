@@ -1,7 +1,9 @@
-from .my_transform import get_unified_valued_bitboard, to_valued_attack_map
-import numpy as np
-import chess
 import itertools
+
+import chess
+import numpy as np
+
+from .my_transform import get_unified_valued_bitboard, to_valued_attack_map
 
 
 class FeatureExtractionFactory():
@@ -22,7 +24,7 @@ class AbstractFeature():
 
 class ExtractNonPawnMaterial(AbstractFeature):
 
-    def extract(board, is_midgame=True):
+    def extract_feature(board, is_midgame, color):
         values = [0, 781, 825, 1276, 2538] if is_midgame else [0, 854, 915, 1380, 2682]
         values = dict(zip(["pawn", "knight", "bishop", "rook", "queen", "king"], values + [0]))
         return np.sum(get_unified_valued_bitboard(board, values=values))
@@ -315,5 +317,7 @@ def get_strength_square(board, color=chess.WHITE):
             f = min(x_, 7 - x_)
             v += weakness[f][us]
         debug[square_y][square_x] = v
+
+    return debug.sum()
 
     return debug.sum()

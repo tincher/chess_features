@@ -1,8 +1,10 @@
 import chess
-
-from src.neighborhood_transform import get_horse_neighbor, get_file_rank_neighbor, get_diagonal_neighbor, get_neighborhood
-from src.my_transform import to_valued_bitboard
 import numpy as np
+
+from src.my_transform import to_valued_bitboard
+from src.neighborhood_transform import (get_diagonal_neighbor,
+                                        get_file_rank_neighbor,
+                                        get_horse_neighbor, get_neighborhood)
 
 
 class TestChessNeighborhoods:
@@ -42,4 +44,5 @@ class TestChessNeighborhoods:
 
     def test_get_neighborhood_clockwise(self):
         neighborhood = get_neighborhood(self.board, 2, 1, clockwise=True)
+        np.testing.assert_equal(neighborhood, [-1, -1, -9, -3, -3, -1, 0, 0, 0, 0, -500, 0, 0, -5, 0, 0, -3])
         np.testing.assert_equal(neighborhood, [-1, -1, -9, -3, -3, -1, 0, 0, 0, 0, -500, 0, 0, -5, 0, 0, -3])
