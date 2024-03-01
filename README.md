@@ -47,6 +47,7 @@ bitmap = converter.to_bitmap(board)
 ## Acknowledgements
 
 - This package utilizes the [Python Chess library](https://python-chess.readthedocs.io/en/latest/).
+- The information for Stockfish features are taken from [Stockfish Evaluation Guide](https://hxim.github.io/Stockfish-Evaluation-Guide/).
 
 ## ChatGPT
 
