@@ -47,3 +47,7 @@ bitmap = converter.to_bitmap(board)
 ## Acknowledgements
 
 - This package utilizes the [Python Chess library](https://python-chess.readthedocs.io/en/latest/).
+
+## ChatGPT
+
+Apart from this readme no ChatGPT was used.
