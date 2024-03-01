@@ -191,7 +191,3 @@ def test_to_chess_neighborhood():
 
 def test_to_stockfish_representation():
     raise NotImplementedError
-
-
-def test_to_stockfish_representation():
-    raise NotImplementedError
