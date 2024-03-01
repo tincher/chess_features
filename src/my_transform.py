@@ -3,7 +3,7 @@ from itertools import product
 import chess
 import numpy as np
 from src.neighborhood_transform import get_neighborhood
-from stockfish_features import *
+from src.stockfish_features import *
 
 
 class StockfishExtractor():
@@ -124,7 +124,8 @@ def to_chess_neighborhoods(board, clockwise=False):
     valued_board = get_unified_valued_bitboard(board)
     neighborhoods = []
     for x, y in product(range(8), repeat=2):
-        neighborhoods.append(get_neighborhood(valued_board, x, y, clockwise=clockwise))
+        neighborhoods.append(get_neighborhood(
+            valued_board, x, y, clockwise=clockwise))
     return np.array(neighborhoods)
 
 
