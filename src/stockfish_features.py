@@ -1,4 +1,5 @@
 import itertools
+from abc import ABC, abstractmethod
 
 import chess
 import numpy as np
@@ -17,7 +18,8 @@ class FeatureExtractionFactory():
         return map_
 
 
-class AbstractFeature():
+class AbstractFeature(ABC):
+    @abstractmethod
     def extract_feature(board, is_midgame, color):
         pass
 
@@ -320,4 +322,5 @@ def get_strength_square(board, color=chess.WHITE):
 
     return debug.sum()
 
+    return debug.sum()
     return debug.sum()
