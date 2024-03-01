@@ -231,8 +231,3 @@ def test_strength_square_endgame():
 def test_strength_square_endgame_2():
     board = chess.Board("6k1/4pp1p/8/8/4B3/8/4PP1P/1K6 w - - 2 2")
     assert strength_square(board) == 0
-
-
-def test_strength_square_endgame_2():
-    board = chess.Board("6k1/4pp1p/8/8/4B3/8/4PP1P/1K6 w - - 2 2")
-    assert strength_square(board) == 0
