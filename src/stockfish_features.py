@@ -10,7 +10,7 @@ class FeatureExtractionFactory():
 
     def get_feature_extraction_map(self):
         map_ = {}
-        for subclass in AbstractFeature.__subclasses__:
+        for subclass in AbstractFeature.__subclasses__():
             map_[subclass.__name__] = subclass
         return map_
 
@@ -70,18 +70,24 @@ def psqt_bonus(board, is_midgame=True):
     piece_map = np.append(piece_bonus, np.flip(piece_bonus, -1), axis=2)
 
     pawn_bonus = np.array([
-        [0, 0, 0, 0, 0, 0, 0, 0], [3, 3, 10, 19, 16, 19, 7, -5], [-9, - 15, 11, 15, 32, 22, 5, -22],
-        [-4, -23, 6, 20, 40, 17, 4, -8], [13, 0, -13, 1, 11, -2, -13, 5], [5, -12, -7, 22, -8, -5, -15, - 8],
+        [0, 0, 0, 0, 0, 0, 0, 0], [3, 3, 10, 19, 16, 19,
+                                   7, -5], [-9, - 15, 11, 15, 32, 22, 5, -22],
+        [-4, -23, 6, 20, 40, 17, 4, -8], [13, 0, -13, 1, 11, -
+                                          2, -13, 5], [5, -12, -7, 22, -8, -5, -15, - 8],
         [-7, 7, -3, -13, 5, -16, 10, -8], [0, 0, 0, 0, 0, 0, 0, 0]
     ] if is_midgame else [
-        [0, 0, 0, 0, 0, 0, 0, 0], [-10, -6, 10, 0, 14, 7, -5, -19], [-10, - 10, -10, 4, 4, 3, -6, -4],
-        [6, -2, -8, -4, -13, -12, -10, -9], [10, 5, 4, -5, -5, -5, 14, 9], [28, 20, 21, 28, 30, 7, 6, 13],
+        [0, 0, 0, 0, 0, 0, 0, 0], [-10, -6, 10, 0, 14,
+                                   7, -5, -19], [-10, - 10, -10, 4, 4, 3, -6, -4],
+        [6, -2, -8, -4, -13, -12, -10, -9], [10, 5, 4, -
+                                             5, -5, -5, 14, 9], [28, 20, 21, 28, 30, 7, 6, 13],
         [0, -11, 12, 21, 25, 19, 4, 7], [0, 0, 0, 0, 0, 0, 0, 0]
     ])
-    opponent_piece_map = np.append(np.expand_dims(pawn_bonus, 0), piece_map, axis=0)
+    opponent_piece_map = np.append(
+        np.expand_dims(pawn_bonus, 0), piece_map, axis=0)
     own_piece_map = np.flip(opponent_piece_map, axis=1)
 
-    values = dict(zip(["pawn", "knight", "bishop", "rook", "queen", "king"], range(1, 7)))
+    values = dict(
+        zip(["pawn", "knight", "bishop", "rook", "queen", "king"], range(1, 7)))
     valued_board = get_unified_valued_bitboard(board, values)
 
     own_piece_bonus_sum = 0
@@ -92,7 +98,8 @@ def psqt_bonus(board, is_midgame=True):
     opponent_piece_bonus_sum = 0
     for i in range(-1, -7, -1):
         current_piece_mask = valued_board == i
-        opponent_piece_bonus_sum += opponent_piece_map[abs(i)-1][current_piece_mask].sum()
+        opponent_piece_bonus_sum += opponent_piece_map[abs(
+            i)-1][current_piece_mask].sum()
 
     return own_piece_bonus_sum - opponent_piece_bonus_sum
 
@@ -112,7 +119,8 @@ def mobility_area(board):
 
 
 def get_mobility_area(board, side=chess.WHITE):
-    values = dict(zip(["pawn", "knight", "bishop", "rook", "queen", "king"], range(1, 7)))
+    values = dict(
+        zip(["pawn", "knight", "bishop", "rook", "queen", "king"], range(1, 7)))
     valued_board = get_unified_valued_bitboard(board, values)
     valued_attack_map = to_valued_attack_map(board)
 
@@ -219,7 +227,8 @@ def get_mobility(board, is_midgame):
                     if board.piece_type_at(square) in [2, 3]:
                         t = t ^ board.pieces(5, chess.WHITE)
                     t = t.tolist() & mobility_area.astype("bool")
-                    mob.append((square, board.piece_type_at(square), sum(t.tolist())))
+                    mob.append(
+                        (square, board.piece_type_at(square), sum(t.tolist())))
                 else:
                     mob.append((square, board.piece_type_at(square), 0))
     all_ = 0
@@ -254,11 +263,14 @@ def pawnless_flank_colored(board, color=chess.WHITE):
     if (king_column == 0):
         pawn_sum = pawn_columns[0] + pawn_columns[1] + pawn_columns[2]
     elif (king_column < 3):
-        pawn_sum = pawn_columns[0] + pawn_columns[1] + pawn_columns[2] + pawn_columns[3]
+        pawn_sum = pawn_columns[0] + pawn_columns[1] + \
+            pawn_columns[2] + pawn_columns[3]
     elif (king_column < 5):
-        pawn_sum = pawn_columns[2] + pawn_columns[3] + pawn_columns[4] + pawn_columns[5]
+        pawn_sum = pawn_columns[2] + pawn_columns[3] + \
+            pawn_columns[4] + pawn_columns[5]
     elif (king_column < 7):
-        pawn_sum = pawn_columns[4] + pawn_columns[5] + pawn_columns[6] + pawn_columns[7]
+        pawn_sum = pawn_columns[4] + pawn_columns[5] + \
+            pawn_columns[6] + pawn_columns[7]
     else:
         pawn_sum = pawn_columns[5] + pawn_columns[6] + pawn_columns[7]
 
