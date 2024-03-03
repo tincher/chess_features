@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 import chess
 import numpy as np
 
-from .my_transform import get_unified_valued_bitboard, to_valued_attack_map
+from .chess_features import get_unified_valued_bitboard, to_valued_attack_map
 
 
 class FeatureExtractionFactory():
