@@ -315,3 +315,8 @@ class ExtractStrengthSquare(AbstractFeature):
             debug[square_y][square_x] = v
 
         return debug.sum()
+
+
+class ExtractStormSquare(AbstractFeature):
+    def extract_feature(board, is_midgame, color):
+        raise NotImplementedError

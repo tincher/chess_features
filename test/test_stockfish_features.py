@@ -4,7 +4,8 @@ import chess
 from src.stockfish_features import (ExtractMobility, ExtractMobilityArea,
                                     ExtractNonPawnMaterial,
                                     ExtractPawnlessFlank, ExtractPieceValue,
-                                    ExtractPsqt, ExtractStrengthSquare)
+                                    ExtractPsqt, ExtractStormSquare,
+                                    ExtractStrengthSquare)
 
 
 class TestNonPawnMaterial:
@@ -208,3 +209,29 @@ class TestStrengthSquare:
     def test_strength_square_endgame_2(self):
         board = chess.Board("6k1/4pp1p/8/8/4B3/8/4PP1P/1K6 w - - 2 2")
         assert ExtractStrengthSquare(board).extract_feature() == 0
+
+
+class TestStormSquare:
+    def test_storm_square_starting_position(self):
+        board = chess.Board()
+        assert ExtractStormSquare(board).extract_feature() == 0
+
+    def test_storm_square_no_queen(self):
+        board = chess.Board("rnbqkbnr/pppppppp/8/8/8/8/PP2PPPP/RNB1KBNR b KQkq - 1 1")
+        assert ExtractStormSquare(board).extract_feature() == 518
+
+    def test_storm_square_random_position(self):
+        board = chess.Board("r1bqk1n1/pppppppp/8/8/8/8/PP2PPPP/RNB1KBNR b KQkq - 1 1")
+        assert ExtractStormSquare(board).extract_feature() == 518
+
+    def test_storm_square_random_position_with_pins(self):
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
+        assert ExtractStormSquare(board).extract_feature() == 2473
+
+    def test_storm_square_endgame(self):
+        board = chess.Board("1k6/4pp1p/8/8/4B3/8/4PP1P/5K2 w - - 2 2")
+        assert ExtractStormSquare(board).extract_feature() == 0
+
+    def test_storm_square_endgame_2(self):
+        board = chess.Board("6k1/4pp1p/8/8/4B3/8/4PP1P/1K6 w - - 2 2")
+        assert ExtractStormSquare(board).extract_feature() == 0
