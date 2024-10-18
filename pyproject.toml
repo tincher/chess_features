@@ -3,7 +3,7 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "chess_features"
+name = "chess_featurizer"
 authors = [{name = "Joel Ewig", email = "joel@familie-ewig.de"}]
 readme = "README.md"
 license = {file = "LICENSE"}
