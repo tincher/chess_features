@@ -7,7 +7,7 @@ name = "chess_features"
 authors = [{name = "Joel Ewig", email = "joel@familie-ewig.de"}]
 readme = "README.md"
 license = {file = "LICENSE"}
-classifiers = ["License :: OSI Approved :: MIT License"]
+classifiers = ["License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"]
 dynamic = ["version", "description"]
 keywords = ["chess", "encoding", "features"]
 dependencies = ["chess>=1.0.0"]
