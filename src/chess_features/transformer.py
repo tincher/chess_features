@@ -33,6 +33,8 @@ class ChessTransformer():
         self.transformation_function = transformation_mapping[transformation_type]
 
     def __call__(self, board):
+        if isinstance(board, str):
+            board = chess.Board(board)
         return self.transformation_function(board)
 
     def get_available_transformations(self):
