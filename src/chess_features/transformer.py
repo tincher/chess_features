@@ -1,3 +1,4 @@
+import chess
 
 from src.chess_features.chess_features import (
     to_bit_attack_map,
