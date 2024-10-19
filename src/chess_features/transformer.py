@@ -40,5 +40,5 @@ class ChessTransformer:
             board = chess.Board(board)
         return self.transformation_function(board)
 
-    def get_available_transformations(self):
+    def get_available_transformations(self) -> np.ndarray:
         return list(transformation_mapping.keys())

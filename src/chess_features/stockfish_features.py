@@ -11,7 +11,7 @@ class FeatureExtractionFactory:
     def __init__(self) -> None:
         self._feature_extraction_map = self.get_feature_extraction_map()
 
-    def get_feature_extraction_map(self):
+    def get_feature_extraction_map(self) -> dict:
         map_ = {}
         for subclass in AbstractFeature.__subclasses__():
             map_[subclass.__name__.replace("Extract", "")] = subclass
@@ -31,7 +31,7 @@ class AbstractFeature(ABC):
         self.color = chess.WHITE if color is None else color
 
     @abstractmethod
-    def extract_feature(self, board: chess.Board, *, is_midgame: bool, color: bool):
+    def extract_feature(self, board: chess.Board, *, is_midgame: bool, color: bool) -> float | int:
         pass
 
 
@@ -47,7 +47,7 @@ class ExtractNonPawnMaterial(AbstractFeature):
 
         self.values = [0, 781, 825, 1276, 2538] if self.is_midgame else [0, 854, 915, 1380, 2682]
 
-    def extract_feature(self):
+    def extract_feature(self) -> float:
         values = dict(
             zip(
                 ["pawn", "knight", "bishop", "rook", "queen", "king"],
@@ -70,7 +70,7 @@ class ExtractPieceValue(AbstractFeature):
 
         self.piece_values = [124, 781, 825, 1276, 2538] if self.is_midgame else [206, 854, 915, 1380, 2682]
 
-    def extract_feature(self):
+    def extract_feature(self) -> int:
         values = dict(
             zip(
                 ["pawn", "knight", "bishop", "rook", "queen", "king"],
@@ -225,7 +225,7 @@ class ExtractPsqt(AbstractFeature):
                 ]
             )
 
-    def extract_feature(self):
+    def extract_feature(self) -> float:
         piece_map = np.append(self.piece_bonus, np.flip(self.piece_bonus, -1), axis=2)
 
         opponent_piece_map = np.append(np.expand_dims(self.pawn_bonus, 0), piece_map, axis=0)
@@ -254,7 +254,7 @@ class ExtractPsqt(AbstractFeature):
 
 
 class ExtractMobilityArea(AbstractFeature):
-    def extract_feature(self):
+    def extract_feature(self) -> float:
         own_mobility_area = self.get_mobility_area(self.board, color=self.color)
         opponent_mobility_area = self.get_mobility_area(self.board.mirror(), color=self.color)
         return own_mobility_area.sum() - opponent_mobility_area.sum()
@@ -418,7 +418,7 @@ class ExtractMobility(AbstractFeature):
                 ],
             ]
 
-    def extract_feature(self):
+    def extract_feature(self) -> float:
         mobility_area = ExtractMobilityArea.get_mobility_area(self.board, color=self.color)[::-1].reshape(-1)
         mob = []
         for square in range(64):
@@ -438,7 +438,7 @@ class ExtractMobility(AbstractFeature):
 
 
 class ExtractPawnlessFlank(AbstractFeature):
-    def extract_feature(self):
+    def extract_feature(self) -> float:
         """1 if only black is in danger, 0 when both or neither, -1 if only white is in danger
 
         Parameters
@@ -453,7 +453,7 @@ class ExtractPawnlessFlank(AbstractFeature):
         """
         return self.pawnless_flank_colored(color=chess.BLACK) - self.pawnless_flank_colored(color=chess.WHITE)
 
-    def pawnless_flank_colored(self, *, color: bool):
+    def pawnless_flank_colored(self, *, color: bool) -> float:
         """Whether the given color's king is on a pawnless flank
 
         Parameters
@@ -489,11 +489,11 @@ class ExtractPawnlessFlank(AbstractFeature):
 
 
 class ExtractStrengthSquare(AbstractFeature):
-    def extract_feature(self):
+    def extract_feature(self) -> float:
         flipped_board = self.board.transform(chess.flip_vertical)
         return self.get_strength_square(self.board, color=self.color) - self.get_strength_square(flipped_board, color=(not self.color))
 
-    def get_strength_square(self, board: chess.Board, *, color: bool):
+    def get_strength_square(self, board: chess.Board, *, color: bool) -> float:
         debug = np.zeros((8, 8))
 
         for square_x, square_y in itertools.product(range(8), repeat=2):
@@ -522,5 +522,5 @@ class ExtractStrengthSquare(AbstractFeature):
 
 
 class ExtractStormSquare(AbstractFeature):
-    def extract_feature(self, board: chess.Board, *, is_midgame: bool, color: bool):
+    def extract_feature(self, board: chess.Board, *, is_midgame: bool, color: bool) -> float:
         raise NotImplementedError

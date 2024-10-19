@@ -7,17 +7,17 @@ from src.chess_features.neighborhood_transform import get_neighborhood
 
 
 class StockfishExtractor:
-    def extract(self, feature_names: list[str] | None = None):
+    def extract(self, feature_names: list[str] | None = None) -> list[float | int]:
         pass
 
 
-def to_white_moving(board: chess.Board):
+def to_white_moving(board: chess.Board) -> chess.Board:
     if not board.turn:
         board.mirror()
     return board
 
 
-def to_fen(board: chess.Board):
+def to_fen(board: chess.Board) -> str:
     return board.fen()
 
 
@@ -37,18 +37,17 @@ def bitboard_to_array(bb: int) -> np.ndarray:
     return b.reshape(8, 8)
 
 
-def to_bitboard(board: chess.Board):
+def to_bitboard(board: chess.Board) -> np.ndarray:
     values = {"queen": 1, "king": 1, "rook": 1, "bishop": 1, "knight": 1, "pawn": 1}
     return to_valued_bitboard(board, values)
 
 
-def to_unified_neg_bitboard(board: chess.Board):
+def to_unified_neg_bitboard(board: chess.Board) -> np.ndarray:
     bitboards = to_bitboard(board).astype(np.int16)
-    print(bitboards.shape)
     return bitboards[:6] - bitboards[6:]
 
 
-def to_unified_bitboard(board: chess.Board):
+def to_unified_bitboard(board: chess.Board) -> np.ndarray:
     bitboards = np.array(
         [
             board.pawns,
@@ -63,7 +62,7 @@ def to_unified_bitboard(board: chess.Board):
     return bitboards_to_array(bitboards)
 
 
-def to_valued_bitboard(board: chess.Board, values: dict | None = None):
+def to_valued_bitboard(board: chess.Board, values: dict | None = None) -> np.ndarray:
     if values is None:
         values = {
             "queen": 9,
@@ -113,17 +112,17 @@ def to_valued_bitboard(board: chess.Board, values: dict | None = None):
     return bitboard * values_array.reshape((-1, 1, 1))
 
 
-def bitboard_to_bitvector(bitboard: chess.Board):
+def bitboard_to_bitvector(bitboard: chess.Board) -> np.ndarray:
     return bitboard.reshape(-1)
 
 
-def get_unified_valued_bitboard(board: chess.Board, values: dict | None = None):
+def get_unified_valued_bitboard(board: chess.Board, values: dict | None = None) -> np.ndarray:
     valued_board = to_valued_bitboard(board, values)
     valued_board[-6:] = -valued_board[-6:]
     return np.sum(valued_board, axis=0)
 
 
-def to_chess_neighborhoods(board: chess.Board, *, clockwise: bool = False):
+def to_chess_neighborhoods(board: chess.Board, *, clockwise: bool = False) -> np.ndarray:
     valued_board = get_unified_valued_bitboard(board)
     neighborhoods = []
     for x, y in product(range(8), repeat=2):
@@ -131,22 +130,18 @@ def to_chess_neighborhoods(board: chess.Board, *, clockwise: bool = False):
     return np.array(neighborhoods)
 
 
-def to_san(board: chess.Board):
+def to_san(board: chess.Board) -> str:
     san_board = chess.Board()
-
-    # Print the move stack
     move_stack = []
 
-    # Traverse the moves of the game
     for move in board.move_stack:
         move_stack.append(san_board.san(move))
         san_board.push(move)
 
-    # Print the SAN notation of the game
     return " ".join(move_stack)
 
 
-def to_bit_attack_map(board: chess.Board):
+def to_bit_attack_map(board: chess.Board) -> np.ndarray:
     attack_map = np.zeros((2, 64))
     for square in chess.SQUARES:
         white_attackers = board.attackers(chess.WHITE, square)
@@ -159,7 +154,7 @@ def to_bit_attack_map(board: chess.Board):
     return np.flip(attack_map.reshape((2, 8, 8)), axis=1)
 
 
-def to_valued_attack_map(board: chess.Board, values: dict | None = None):
+def to_valued_attack_map(board: chess.Board, values: dict | None = None) -> np.ndarray:
     if values is None:
         values = {
             "queen": 9,
@@ -208,7 +203,7 @@ def to_valued_attack_map(board: chess.Board, values: dict | None = None):
     return np.flip(attack_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
 
 
-def to_bit_defend_map(board: chess.Board):
+def to_bit_defend_map(board: chess.Board) -> np.ndarray:
     attack_map = np.zeros((2, 64))
     for square in chess.SQUARES:
         white_defenders = board.attackers(chess.BLACK, square)
@@ -221,7 +216,7 @@ def to_bit_defend_map(board: chess.Board):
     return np.flip(attack_map.reshape((2, 8, 8)), axis=1)
 
 
-def to_valued_defend_map(board: chess.Board, values: dict | None = None):
+def to_valued_defend_map(board: chess.Board, values: dict | None = None) -> np.ndarray:
     if values is None:
         values = {
             "queen": 9,
@@ -231,7 +226,6 @@ def to_valued_defend_map(board: chess.Board, values: dict | None = None):
             "knight": 3,
             "pawn": 1,
         }
-    black, white = board.occupied_co
 
     values_array = np.array(
         [
@@ -269,5 +263,4 @@ def to_valued_defend_map(board: chess.Board, values: dict | None = None):
         if black_min_defender >= 0:
             defend_map[5 + black_min_defender, square] = 1
 
-    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
     return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))

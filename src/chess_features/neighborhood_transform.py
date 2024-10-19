@@ -3,7 +3,7 @@ from itertools import product
 import numpy as np
 
 
-def get_square(board: np.array, changing: int, steady: int, *, y_changes: bool = True):
+def get_square(board: np.array, changing: int, steady: int, *, y_changes: bool = True) -> int:
     if y_changes:
         return board[changing][steady]
     return board[steady][changing]
@@ -16,7 +16,7 @@ def get_file_rank_neighbor(
     down_right_of_square: int = 1,
     *,
     file_wise: bool = True,
-):
+) -> int:
     steady_variable = x if file_wise else y
     changing_variable = y if file_wise else x
 
@@ -42,7 +42,7 @@ def get_horse_neighbor(
     under_square: bool = True,
     right_of_square: bool = True,
     closer_to_vertical: bool = True,
-):
+) -> int:
     diffs = ((1, 2), (2, 1))[closer_to_vertical]
     diffs = (
         diffs[0] if under_square else -diffs[0],
@@ -53,7 +53,7 @@ def get_horse_neighbor(
     return board[horse_y][horse_x]
 
 
-def get_diagonal_neighbor(board: np.array, x: int, y: int, under_square: int = 1, right_of_square: int = 1):
+def get_diagonal_neighbor(board: np.array, x: int, y: int, under_square: int = 1, right_of_square: int = 1) -> int:
     fn_matrix = [[min(x, y), min(7 - x, y)], [min(x, 7 - y), min(7 - x, 7 - y)]]
     max_distance = fn_matrix[max(0, under_square)][max(0, right_of_square)]
 
@@ -63,7 +63,7 @@ def get_diagonal_neighbor(board: np.array, x: int, y: int, under_square: int = 1
     return 0
 
 
-def get_neighborhood(board: np.array, x: int, y: int, *, clockwise: bool = True):
+def get_neighborhood(board: np.array, x: int, y: int, *, clockwise: bool = True) -> list[int]:
     neighborhood = [board[y][x]]
     for under, right, close in product([True, False], repeat=3):
         neighborhood.append(
