@@ -164,3 +164,4 @@ cython_debug/
 .DS_Store
 DeepChess-AI
 tmp.*
+todos.txt
