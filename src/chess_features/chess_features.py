@@ -205,9 +205,7 @@ def to_valued_attack_map(board: chess.Board, values: dict | None = None):
         if black_min_attacker >= 0:
             attack_map[5 + black_min_attacker, square] = 1
 
-    return np.flip(attack_map.reshape((12, 8, 8)), axis=1) * values_array.reshape(
-        (-1, 1, 1)
-    )
+    return np.flip(attack_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
 
 
 def to_bit_defend_map(board: chess.Board):
@@ -271,9 +269,5 @@ def to_valued_defend_map(board: chess.Board, values: dict | None = None):
         if black_min_defender >= 0:
             defend_map[5 + black_min_defender, square] = 1
 
-    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape(
-        (-1, 1, 1)
-    )
-    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape(
-        (-1, 1, 1)
-    )
+    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
+    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))

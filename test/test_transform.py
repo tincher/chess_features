@@ -106,9 +106,7 @@ def test_to_pgn():
     with open("./test/test_files/fisher.pgn", encoding="utf-8") as pgn_file:
         first_game = chess.pgn.read_game(pgn_file)
 
-    with open(
-        "./test/test_files/expected_san.txt", encoding="utf-8"
-    ) as expected_san_file:
+    with open("./test/test_files/expected_san.txt", encoding="utf-8") as expected_san_file:
         expected_san = expected_san_file.read()
 
     node = first_game
@@ -161,9 +159,7 @@ def test_to_valued_attack_map():
     attack_map = to_valued_attack_map(board)
 
     # load expected
-    with open(
-        "./test/test_files/expected_valued_attack_map.txt", encoding="utf-8"
-    ) as f:
+    with open("./test/test_files/expected_valued_attack_map.txt", encoding="utf-8") as f:
         data = f.read()
     data = data.replace("array", "np.array")
     print(data)
@@ -178,9 +174,7 @@ def test_to_valued_defend_map():
     attack_map = to_valued_defend_map(board)
 
     # load expected
-    with open(
-        "./test/test_files/expected_valued_defend_map.txt", encoding="utf-8"
-    ) as f:
+    with open("./test/test_files/expected_valued_defend_map.txt", encoding="utf-8") as f:
         data = f.read()
     data = data.replace("array", "np.array")
     print(data)
@@ -195,9 +189,7 @@ def test_to_chess_neighborhood():
     neighborhood = to_chess_neighborhoods(board)
     assert neighborhood.shape == (64, 17)
 
-    with open(
-        "./test/test_files/expected_chess_neighborhood.txt", encoding="utf-8"
-    ) as f:
+    with open("./test/test_files/expected_chess_neighborhood.txt", encoding="utf-8") as f:
         data = f.read()
     data = data.replace("array", "np.array")
     loaded_neighborhood = eval(data)

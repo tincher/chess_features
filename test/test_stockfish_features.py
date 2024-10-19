@@ -92,9 +92,7 @@ class TestMobilityArea:
         assert ExtractMobilityArea(board).extract_feature() == 3
 
     def test_mobility_area_random_position_with_pins(self):
-        board = chess.Board(
-            "b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5"
-        )
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
         assert ExtractMobilityArea(board).extract_feature() == -3
 
 
@@ -112,9 +110,7 @@ class TestMobility:
         assert ExtractMobility(board, is_midgame=True).extract_feature() == -66
 
     def test_mobility_mg_random_position_with_pins(self):
-        board = chess.Board(
-            "b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5"
-        )
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
         assert ExtractMobility(board, is_midgame=True).extract_feature() == -137
 
     def test_mobility_eg_starting_position(self):
@@ -130,50 +126,34 @@ class TestMobility:
         assert ExtractMobility(board, is_midgame=False).extract_feature() == -116
 
     def test_mobility_eg_random_position_with_pins(self):
-        board = chess.Board(
-            "b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5"
-        )
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
         assert ExtractMobility(board, is_midgame=False).extract_feature() == -73
 
 
 class TestPawnlessFlankColored:
     def test_pawnless_flank_colored_starting_position(self):
         board = chess.Board()
-        assert (
-            ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
-        )
+        assert ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
 
     def test_pawnless_flank_colored_no_queen(self):
         board = chess.Board("rnbqkbnr/pppppppp/8/8/8/8/PP2PPPP/RNB1KBNR b KQkq - 1 1")
-        assert (
-            ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
-        )
+        assert ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
 
     def test_pawnless_flank_colored_random_position(self):
         board = chess.Board("r1bqk1n1/pppppppp/8/8/8/8/PP2PPPP/RNB1KBNR b KQkq - 1 1")
-        assert (
-            ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
-        )
+        assert ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
 
     def test_pawnless_flank_colored_random_position_with_pins(self):
-        board = chess.Board(
-            "b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5"
-        )
-        assert (
-            ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
-        )
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
+        assert ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
 
     def test_pawnless_flank_colored_endgame(self):
         board = chess.Board("1k6/4pp1p/8/8/4B3/8/4PP1P/5K2 w - - 2 2")
-        assert (
-            ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
-        )
+        assert ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.WHITE) == 0
 
     def test_pawnless_flank_colored_endgame_black(self):
         board = chess.Board("1k6/4pp1p/8/8/4B3/8/4PP1P/5K2 w - - 2 2")
-        assert (
-            ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.BLACK) == 1
-        )
+        assert ExtractPawnlessFlank(board).pawnless_flank_colored(color=chess.BLACK) == 1
 
 
 class TestPawnlessFlank:
@@ -190,9 +170,7 @@ class TestPawnlessFlank:
         assert ExtractPawnlessFlank(board).extract_feature() == 0
 
     def test_pawnless_flank_random_position_with_pins(self):
-        board = chess.Board(
-            "b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5"
-        )
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
         assert ExtractPawnlessFlank(board).extract_feature() == 0
 
     def test_pawnless_flank_endgame(self):
@@ -218,9 +196,7 @@ class TestStrengthSquare:
         assert ExtractStrengthSquare(board).extract_feature() == 836
 
     def test_strength_square_random_position_with_pins(self):
-        board = chess.Board(
-            "b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5"
-        )
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
         assert ExtractStrengthSquare(board).extract_feature() == 250
 
     def test_strength_square_endgame(self):
@@ -246,9 +222,7 @@ class TestStormSquare:
         assert ExtractStormSquare(board).extract_feature() == 518
 
     def test_storm_square_random_position_with_pins(self):
-        board = chess.Board(
-            "b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5"
-        )
+        board = chess.Board("b2rk1n1/p1p1pp2/pP1p2b1/1P1N1P1p/2qBK3/4B3/7P/RN2r2R w KQkq - 2 5")
         assert ExtractStormSquare(board).extract_feature() == 2473
 
     def test_storm_square_endgame(self):

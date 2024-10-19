@@ -45,9 +45,7 @@ class ExtractNonPawnMaterial(AbstractFeature):
     ) -> None:
         super().__init__(board, is_midgame=is_midgame, color=color)
 
-        self.values = (
-            [0, 781, 825, 1276, 2538] if self.is_midgame else [0, 854, 915, 1380, 2682]
-        )
+        self.values = [0, 781, 825, 1276, 2538] if self.is_midgame else [0, 854, 915, 1380, 2682]
 
     def extract_feature(self):
         values = dict(
@@ -70,11 +68,7 @@ class ExtractPieceValue(AbstractFeature):
     ) -> None:
         super().__init__(board, is_midgame=is_midgame, color=color)
 
-        self.piece_values = (
-            [124, 781, 825, 1276, 2538]
-            if self.is_midgame
-            else [206, 854, 915, 1380, 2682]
-        )
+        self.piece_values = [124, 781, 825, 1276, 2538] if self.is_midgame else [206, 854, 915, 1380, 2682]
 
     def extract_feature(self):
         values = dict(
@@ -234,9 +228,7 @@ class ExtractPsqt(AbstractFeature):
     def extract_feature(self):
         piece_map = np.append(self.piece_bonus, np.flip(self.piece_bonus, -1), axis=2)
 
-        opponent_piece_map = np.append(
-            np.expand_dims(self.pawn_bonus, 0), piece_map, axis=0
-        )
+        opponent_piece_map = np.append(np.expand_dims(self.pawn_bonus, 0), piece_map, axis=0)
         own_piece_map = np.flip(opponent_piece_map, axis=1)
 
         values = dict(
@@ -256,9 +248,7 @@ class ExtractPsqt(AbstractFeature):
         opponent_piece_bonus_sum = 0
         for i in range(-1, -7, -1):
             current_piece_mask = valued_board == i
-            opponent_piece_bonus_sum += opponent_piece_map[abs(i) - 1][
-                current_piece_mask
-            ].sum()
+            opponent_piece_bonus_sum += opponent_piece_map[abs(i) - 1][current_piece_mask].sum()
 
         return own_piece_bonus_sum - opponent_piece_bonus_sum
 
@@ -266,9 +256,7 @@ class ExtractPsqt(AbstractFeature):
 class ExtractMobilityArea(AbstractFeature):
     def extract_feature(self):
         own_mobility_area = self.get_mobility_area(self.board, color=self.color)
-        opponent_mobility_area = self.get_mobility_area(
-            self.board.mirror(), color=self.color
-        )
+        opponent_mobility_area = self.get_mobility_area(self.board.mirror(), color=self.color)
         return own_mobility_area.sum() - opponent_mobility_area.sum()
 
     @classmethod
@@ -291,13 +279,7 @@ class ExtractMobilityArea(AbstractFeature):
         # attacked by opponent pawns
         mobility_area -= valued_attack_map[6]
         # own blocked pawns
-        mobility_area[1:] -= (
-            (
-                (valued_board[:7] == 1).astype("int")
-                + (valued_board[1:] == 1).astype("int")
-            )
-            > 1
-        ).astype("int")
+        mobility_area[1:] -= (((valued_board[:7] == 1).astype("int") + (valued_board[1:] == 1).astype("int")) > 1).astype("int")
         # own blockers for king
 
         pins = cls.get_pinned(board, color=color)
@@ -437,22 +419,16 @@ class ExtractMobility(AbstractFeature):
             ]
 
     def extract_feature(self):
-        mobility_area = ExtractMobilityArea.get_mobility_area(
-            self.board, color=self.color
-        )[::-1].reshape(-1)
+        mobility_area = ExtractMobilityArea.get_mobility_area(self.board, color=self.color)[::-1].reshape(-1)
         mob = []
         for square in range(64):
-            if self.board.color_at(square) == chess.WHITE and self.board.piece_type_at(
-                square
-            ) not in [None, 1, 6]:
+            if self.board.color_at(square) == chess.WHITE and self.board.piece_type_at(square) not in [None, 1, 6]:
                 if not self.board.is_pinned(chess.WHITE, square):
                     t = self.board.attacks(square)
                     if self.board.piece_type_at(square) in [2, 3]:
                         t = t ^ self.board.pieces(5, chess.WHITE)
                     t = t.tolist() & mobility_area.astype("bool")
-                    mob.append(
-                        (square, self.board.piece_type_at(square), sum(t.tolist()))
-                    )
+                    mob.append((square, self.board.piece_type_at(square), sum(t.tolist())))
                 else:
                     mob.append((square, self.board.piece_type_at(square), 0))
         all_ = 0
@@ -475,9 +451,7 @@ class ExtractPawnlessFlank(AbstractFeature):
         int
             who is in favor
         """
-        return self.pawnless_flank_colored(
-            color=chess.BLACK
-        ) - self.pawnless_flank_colored(color=chess.WHITE)
+        return self.pawnless_flank_colored(color=chess.BLACK) - self.pawnless_flank_colored(color=chess.WHITE)
 
     def pawnless_flank_colored(self, *, color: bool):
         """Whether the given color's king is on a pawnless flank
@@ -503,17 +477,11 @@ class ExtractPawnlessFlank(AbstractFeature):
         if king_column == 0:
             pawn_sum = pawn_columns[0] + pawn_columns[1] + pawn_columns[2]
         elif king_column < 3:
-            pawn_sum = (
-                pawn_columns[0] + pawn_columns[1] + pawn_columns[2] + pawn_columns[3]
-            )
+            pawn_sum = pawn_columns[0] + pawn_columns[1] + pawn_columns[2] + pawn_columns[3]
         elif king_column < 5:
-            pawn_sum = (
-                pawn_columns[2] + pawn_columns[3] + pawn_columns[4] + pawn_columns[5]
-            )
+            pawn_sum = pawn_columns[2] + pawn_columns[3] + pawn_columns[4] + pawn_columns[5]
         elif king_column < 7:
-            pawn_sum = (
-                pawn_columns[4] + pawn_columns[5] + pawn_columns[6] + pawn_columns[7]
-            )
+            pawn_sum = pawn_columns[4] + pawn_columns[5] + pawn_columns[6] + pawn_columns[7]
         else:
             pawn_sum = pawn_columns[5] + pawn_columns[6] + pawn_columns[7]
 
@@ -523,9 +491,7 @@ class ExtractPawnlessFlank(AbstractFeature):
 class ExtractStrengthSquare(AbstractFeature):
     def extract_feature(self):
         flipped_board = self.board.transform(chess.flip_vertical)
-        return self.get_strength_square(
-            self.board, color=self.color
-        ) - self.get_strength_square(flipped_board, color=(not self.color))
+        return self.get_strength_square(self.board, color=self.color) - self.get_strength_square(flipped_board, color=(not self.color))
 
     def get_strength_square(self, board: chess.Board, *, color: bool):
         debug = np.zeros((8, 8))
@@ -543,18 +509,9 @@ class ExtractStrengthSquare(AbstractFeature):
                 us = 0
                 for y in range(square_y + 1):
                     if (
-                        (
-                            board.piece_type_at((x_) + y * 8) == 1
-                            and board.color_at((x_) + y * 8) == (not color)
-                        )
-                        and not (
-                            board.piece_type_at((x_ - 1) + (y - 1) * 8) == 1
-                            and board.color_at((x_ - 1) + (y - 1) * 8) == color
-                        )
-                        and not (
-                            board.piece_type_at((x_ + 1) + (y - 1) * 8) == 1
-                            and board.color_at((x_ + 1) + (y - 1) * 8) == color
-                        )
+                        (board.piece_type_at((x_) + y * 8) == 1 and board.color_at((x_) + y * 8) == (not color))
+                        and not (board.piece_type_at((x_ - 1) + (y - 1) * 8) == 1 and board.color_at((x_ - 1) + (y - 1) * 8) == color)
+                        and not (board.piece_type_at((x_ + 1) + (y - 1) * 8) == 1 and board.color_at((x_ + 1) + (y - 1) * 8) == color)
                     ):
                         us = 7 - y
                 f = min(x_, 7 - x_)

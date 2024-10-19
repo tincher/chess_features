@@ -48,28 +48,17 @@ def get_horse_neighbor(
         diffs[0] if under_square else -diffs[0],
         diffs[1] if right_of_square else -diffs[1],
     )
-    if (
-        (horse_y := y + diffs[0]) < 0
-        or horse_y > 7
-        or (horse_x := x + diffs[1]) < 0
-        or horse_x > 7
-    ):
+    if (horse_y := y + diffs[0]) < 0 or horse_y > 7 or (horse_x := x + diffs[1]) < 0 or horse_x > 7:
         return 0
     return board[horse_y][horse_x]
 
 
-def get_diagonal_neighbor(
-    board: np.array, x: int, y: int, under_square: int = 1, right_of_square: int = 1
-):
+def get_diagonal_neighbor(board: np.array, x: int, y: int, under_square: int = 1, right_of_square: int = 1):
     fn_matrix = [[min(x, y), min(7 - x, y)], [min(x, 7 - y), min(7 - x, 7 - y)]]
     max_distance = fn_matrix[max(0, under_square)][max(0, right_of_square)]
 
     for distance in range(1, max_distance + 1):
-        if (
-            neighbor_value := board[y + distance * under_square][
-                x + distance * right_of_square
-            ]
-        ) != 0:
+        if (neighbor_value := board[y + distance * under_square][x + distance * right_of_square]) != 0:
             return neighbor_value
     return 0
 
