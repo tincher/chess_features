@@ -2,12 +2,20 @@ import chess
 import chess.pgn
 import numpy as np
 
-from src.chess_features import (bitboard_to_bitvector, to_bit_attack_map,
-                                to_bit_defend_map, to_bitboard,
-                                to_chess_neighborhoods, to_fen, to_san,
-                                to_unified_neg_bitboard, to_valued_attack_map,
-                                to_valued_bitboard, to_valued_defend_map,
-                                to_white_moving)
+from src.chess_features.chess_features import (
+    bitboard_to_bitvector,
+    to_bit_attack_map,
+    to_bit_defend_map,
+    to_bitboard,
+    to_chess_neighborhoods,
+    to_fen,
+    to_san,
+    to_unified_neg_bitboard,
+    to_valued_attack_map,
+    to_valued_bitboard,
+    to_valued_defend_map,
+    to_white_moving,
+)
 
 
 def test_bitboard_to_bitvector():

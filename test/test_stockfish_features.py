@@ -1,11 +1,16 @@
 
 import chess
 
-from src.stockfish_features import (ExtractMobility, ExtractMobilityArea,
-                                    ExtractNonPawnMaterial,
-                                    ExtractPawnlessFlank, ExtractPieceValue,
-                                    ExtractPsqt, ExtractStormSquare,
-                                    ExtractStrengthSquare)
+from src.chess_features.stockfish_features import (
+    ExtractMobility,
+    ExtractMobilityArea,
+    ExtractNonPawnMaterial,
+    ExtractPawnlessFlank,
+    ExtractPieceValue,
+    ExtractPsqt,
+    ExtractStormSquare,
+    ExtractStrengthSquare,
+)
 
 
 class TestNonPawnMaterial:

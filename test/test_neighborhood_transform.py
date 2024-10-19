@@ -1,10 +1,13 @@
 import chess
 import numpy as np
 
-from src.chess_features import to_valued_bitboard
-from src.neighborhood_transform import (get_diagonal_neighbor,
-                                        get_file_rank_neighbor,
-                                        get_horse_neighbor, get_neighborhood)
+from src.chess_features.chess_features import to_valued_bitboard
+from src.chess_features.neighborhood_transform import (
+    get_diagonal_neighbor,
+    get_file_rank_neighbor,
+    get_horse_neighbor,
+    get_neighborhood,
+)
 
 
 class TestChessNeighborhoods:
