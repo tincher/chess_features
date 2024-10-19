@@ -1,4 +1,5 @@
 import chess
+import numpy as np
 
 from src.chess_features.chess_features import (
     to_bit_attack_map,
@@ -25,15 +26,16 @@ transformation_mapping = {
     "valued_attack": to_valued_attack_map,
     "valued_unified": to_valued_bitboard,
     "valued_defend": to_valued_defend_map,
-    "white_moving": to_white_moving
+    "white_moving": to_white_moving,
 }
 
-class ChessTransformer():
-    def __init__(self, transformation_type) -> None:
+
+class ChessTransformer:
+    def __init__(self, transformation_type: str) -> None:
         self.transformation_type = transformation_type
         self.transformation_function = transformation_mapping[transformation_type]
 
-    def __call__(self, board):
+    def __call__(self, board: chess.Board) -> np.ndarray:
         if isinstance(board, str):
             board = chess.Board(board)
         return self.transformation_function(board)

@@ -3,3 +3,5 @@
 __version__ = "0.2.0"
 
 from .transformer import ChessTransformer
+
+__all__ = ["ChessTransformer"]

@@ -6,18 +6,18 @@ import numpy as np
 from src.chess_features.neighborhood_transform import get_neighborhood
 
 
-class StockfishExtractor():
-    def extract(feature_names=None):
+class StockfishExtractor:
+    def extract(self, feature_names: list[str] | None = None):
         pass
 
 
-def to_white_moving(board):
+def to_white_moving(board: chess.Board):
     if not board.turn:
         board.mirror()
     return board
 
 
-def to_fen(board):
+def to_fen(board: chess.Board):
     return board.fen()
 
 
@@ -37,99 +37,101 @@ def bitboard_to_array(bb: int) -> np.ndarray:
     return b.reshape(8, 8)
 
 
-def to_bitboard(board):
-    values = {
-        'queen': 1,
-        'king': 1,
-        'rook': 1,
-        'bishop': 1,
-        'knight': 1,
-        'pawn': 1
-    }
+def to_bitboard(board: chess.Board):
+    values = {"queen": 1, "king": 1, "rook": 1, "bishop": 1, "knight": 1, "pawn": 1}
     return to_valued_bitboard(board, values)
 
 
-def to_unified_neg_bitboard(board):
+def to_unified_neg_bitboard(board: chess.Board):
     bitboards = to_bitboard(board).astype(np.int16)
     print(bitboards.shape)
     return bitboards[:6] - bitboards[6:]
 
 
-def to_unified_bitboard(board):
-    bitboards = np.array([
-        board.pawns,
-        board.knights,
-        board.bishops,
-        board.rooks,
-        board.queens,
-        board.kings,
-    ], dtype=np.uint64)
+def to_unified_bitboard(board: chess.Board):
+    bitboards = np.array(
+        [
+            board.pawns,
+            board.knights,
+            board.bishops,
+            board.rooks,
+            board.queens,
+            board.kings,
+        ],
+        dtype=np.uint64,
+    )
     return bitboards_to_array(bitboards)
 
 
-def to_valued_bitboard(board, values=None):
+def to_valued_bitboard(board: chess.Board, values: dict | None = None):
     if values is None:
         values = {
-            'queen': 9,
-            'king': 500,
-            'rook': 5,
-            'bishop': 3,
-            'knight': 3,
-            'pawn': 1
+            "queen": 9,
+            "king": 500,
+            "rook": 5,
+            "bishop": 3,
+            "knight": 3,
+            "pawn": 1,
         }
     black, white = board.occupied_co
 
-    values_array = np.array([values['pawn'],
-                             values['knight'],
-                             values['bishop'],
-                             values['rook'],
-                             values['queen'],
-                             values['king'],
-                             values['pawn'],
-                             values['knight'],
-                             values['bishop'],
-                             values['rook'],
-                             values['queen'],
-                             values['king']])
+    values_array = np.array(
+        [
+            values["pawn"],
+            values["knight"],
+            values["bishop"],
+            values["rook"],
+            values["queen"],
+            values["king"],
+            values["pawn"],
+            values["knight"],
+            values["bishop"],
+            values["rook"],
+            values["queen"],
+            values["king"],
+        ]
+    )
 
-    bitboards = np.array([
-        white & board.pawns,
-        white & board.knights,
-        white & board.bishops,
-        white & board.rooks,
-        white & board.queens,
-        white & board.kings,
-        black & board.pawns,
-        black & board.knights,
-        black & board.bishops,
-        black & board.rooks,
-        black & board.queens,
-        black & board.kings,
-    ], dtype=np.uint64)
+    bitboards = np.array(
+        [
+            white & board.pawns,
+            white & board.knights,
+            white & board.bishops,
+            white & board.rooks,
+            white & board.queens,
+            white & board.kings,
+            black & board.pawns,
+            black & board.knights,
+            black & board.bishops,
+            black & board.rooks,
+            black & board.queens,
+            black & board.kings,
+        ],
+        dtype=np.uint64,
+    )
     bitboard = bitboards_to_array(bitboards)
     return bitboard * values_array.reshape((-1, 1, 1))
 
 
-def bitboard_to_bitvector(bitboard):
+def bitboard_to_bitvector(bitboard: chess.Board):
     return bitboard.reshape(-1)
 
 
-def get_unified_valued_bitboard(board, values=None):
+def get_unified_valued_bitboard(board: chess.Board, values: dict | None = None):
     valued_board = to_valued_bitboard(board, values)
     valued_board[-6:] = -valued_board[-6:]
     return np.sum(valued_board, axis=0)
 
 
-def to_chess_neighborhoods(board, clockwise=False):
+def to_chess_neighborhoods(board: chess.Board, *, clockwise: bool = False):
     valued_board = get_unified_valued_bitboard(board)
     neighborhoods = []
     for x, y in product(range(8), repeat=2):
-        neighborhoods.append(get_neighborhood(
-            valued_board, x, y, clockwise=clockwise))
+        neighborhoods.append(get_neighborhood(valued_board, x, y, clockwise=clockwise))
     return np.array(neighborhoods)
 
 
-def to_san(board):
+def to_san(board: chess.Board):
     san_board = chess.Board()
 
     # Print the move stack
@@ -144,7 +146,7 @@ def to_san(board):
     return " ".join(move_stack)
 
 
-def to_bit_attack_map(board):
+def to_bit_attack_map(board: chess.Board):
     attack_map = np.zeros((2, 64))
     for square in chess.SQUARES:
         white_attackers = board.attackers(chess.WHITE, square)
@@ -157,48 +159,58 @@ def to_bit_attack_map(board):
     return np.flip(attack_map.reshape((2, 8, 8)), axis=1)
 
 
-def to_valued_attack_map(board, values=None):
+def to_valued_attack_map(board: chess.Board, values: dict | None = None):
     if values is None:
         values = {
-            'queen': 9,
-            'king': 500,
-            'rook': 5,
-            'bishop': 3,
-            'knight': 3,
-            'pawn': 1
+            "queen": 9,
+            "king": 500,
+            "rook": 5,
+            "bishop": 3,
+            "knight": 3,
+            "pawn": 1,
         }
-    values_array = np.array([values['pawn'],
-                             values['knight'],
-                             values['bishop'],
-                             values['rook'],
-                             values['queen'],
-                             values['king'],
-                             values['pawn'],
-                             values['knight'],
-                             values['bishop'],
-                             values['rook'],
-                             values['queen'],
-                             values['king']])
+    values_array = np.array(
+        [
+            values["pawn"],
+            values["knight"],
+            values["bishop"],
+            values["rook"],
+            values["queen"],
+            values["king"],
+            values["pawn"],
+            values["knight"],
+            values["bishop"],
+            values["rook"],
+            values["queen"],
+            values["king"],
+        ]
+    )
 
-    attack_map = np.zeros((2*6, 64))
+    attack_map = np.zeros((2 * 6, 64))
     for square in chess.SQUARES:
         white_attackers = board.attackers(chess.WHITE, square)
         black_attackers = board.attackers(chess.BLACK, square)
 
-        white_min_attacker = min((board.piece_type_at(white_attacker)
-                                 for white_attacker in white_attackers), default=-1)
+        white_min_attacker = min(
+            (board.piece_type_at(white_attacker) for white_attacker in white_attackers),
+            default=-1,
+        )
         if white_min_attacker >= 0:
-            attack_map[white_min_attacker-1, square] = 1
+            attack_map[white_min_attacker - 1, square] = 1
 
-        black_min_attacker = min((board.piece_type_at(black_attacker)
-                                 for black_attacker in black_attackers), default=-1)
+        black_min_attacker = min(
+            (board.piece_type_at(black_attacker) for black_attacker in black_attackers),
+            default=-1,
+        )
         if black_min_attacker >= 0:
             attack_map[5 + black_min_attacker, square] = 1
 
-    return np.flip(attack_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
+    return np.flip(attack_map.reshape((12, 8, 8)), axis=1) * values_array.reshape(
+        (-1, 1, 1)
+    )
 
 
-def to_bit_defend_map(board):
+def to_bit_defend_map(board: chess.Board):
     attack_map = np.zeros((2, 64))
     for square in chess.SQUARES:
         white_defenders = board.attackers(chess.BLACK, square)
@@ -211,45 +223,57 @@ def to_bit_defend_map(board):
     return np.flip(attack_map.reshape((2, 8, 8)), axis=1)
 
 
-def to_valued_defend_map(board, values=None):
+def to_valued_defend_map(board: chess.Board, values: dict | None = None):
     if values is None:
         values = {
-            'queen': 9,
-            'king': 500,
-            'rook': 5,
-            'bishop': 3,
-            'knight': 3,
-            'pawn': 1
+            "queen": 9,
+            "king": 500,
+            "rook": 5,
+            "bishop": 3,
+            "knight": 3,
+            "pawn": 1,
         }
     black, white = board.occupied_co
 
-    values_array = np.array([values['pawn'],
-                             values['knight'],
-                             values['bishop'],
-                             values['rook'],
-                             values['queen'],
-                             values['king'],
-                             values['pawn'],
-                             values['knight'],
-                             values['bishop'],
-                             values['rook'],
-                             values['queen'],
-                             values['king']])
+    values_array = np.array(
+        [
+            values["pawn"],
+            values["knight"],
+            values["bishop"],
+            values["rook"],
+            values["queen"],
+            values["king"],
+            values["pawn"],
+            values["knight"],
+            values["bishop"],
+            values["rook"],
+            values["queen"],
+            values["king"],
+        ]
+    )
 
-    defend_map = np.zeros((2*6, 64))
+    defend_map = np.zeros((2 * 6, 64))
     for square in chess.SQUARES:
         white_defenders = board.attackers(chess.BLACK, square)
         black_defenders = board.attackers(chess.WHITE, square)
 
-        white_min_defender = min((board.piece_type_at(white_attacker)
-                                 for white_attacker in white_defenders), default=-1)
+        white_min_defender = min(
+            (board.piece_type_at(white_attacker) for white_attacker in white_defenders),
+            default=-1,
+        )
         if white_min_defender >= 0:
-            defend_map[white_min_defender-1, square] = 1
+            defend_map[white_min_defender - 1, square] = 1
 
-        black_min_defender = min((board.piece_type_at(black_attacker)
-                                 for black_attacker in black_defenders), default=-1)
+        black_min_defender = min(
+            (board.piece_type_at(black_attacker) for black_attacker in black_defenders),
+            default=-1,
+        )
         if black_min_defender >= 0:
             defend_map[5 + black_min_defender, square] = 1
 
-    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
-    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape((-1, 1, 1))
+    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape(
+        (-1, 1, 1)
+    )
+    return np.flip(defend_map.reshape((12, 8, 8)), axis=1) * values_array.reshape(
+        (-1, 1, 1)
+    )
