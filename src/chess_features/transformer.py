@@ -2,6 +2,7 @@ import chess
 import numpy as np
 
 from src.chess_features.chess_features import (
+    get_unified_valued_bitboard,
     to_bit_attack_map,
     to_bit_defend_map,
     to_bitboard,
@@ -27,6 +28,7 @@ transformation_mapping = {
     "valued_unified": to_valued_bitboard,
     "valued_defend": to_valued_defend_map,
     "white_moving": to_white_moving,
+    "valued_single": get_unified_valued_bitboard,
 }
 
 
