@@ -1,7 +1,7 @@
 import chess
 import numpy as np
 
-from src.chess_features.chess_features import (
+from .chess_features import (
     get_unified_valued_bitboard,
     to_bit_attack_map,
     to_bit_defend_map,
@@ -37,10 +37,10 @@ class ChessTransformer:
         self.transformation_type = transformation_type
         self.transformation_function = transformation_mapping[transformation_type]
 
-    def __call__(self, board: chess.Board) -> np.ndarray:
+    def __call__(self, board: chess.Board, values: dict) -> np.ndarray:
         if isinstance(board, str):
             board = chess.Board(board)
-        return self.transformation_function(board)
+        return self.transformation_function(board, values)
 
     def get_available_transformations(self) -> np.ndarray:
         return list(transformation_mapping.keys())

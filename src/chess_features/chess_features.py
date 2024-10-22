@@ -3,7 +3,7 @@ from itertools import product
 import chess
 import numpy as np
 
-from src.chess_features.neighborhood_transform import get_neighborhood
+from .neighborhood_transform import get_neighborhood
 
 
 class StockfishExtractor:
