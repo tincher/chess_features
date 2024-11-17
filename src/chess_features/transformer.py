@@ -1,46 +1,19 @@
 import chess
 import numpy as np
 
-from .chess_features import (
-    get_unified_valued_bitboard,
-    to_bit_attack_map,
-    to_bit_defend_map,
-    to_bitboard,
-    to_chess_neighborhoods,
-    to_fen,
-    to_san,
-    to_unified_neg_bitboard,
-    to_valued_attack_map,
-    to_valued_bitboard,
-    to_valued_defend_map,
-    to_white_moving,
-)
-
-transformation_mapping = {
-    "bit_attack": to_bit_attack_map,
-    "bit_defend": to_bit_defend_map,
-    "bit": to_bitboard,
-    "neighborhood": to_chess_neighborhoods,
-    "fen": to_fen,
-    "san": to_san,
-    "bit_unified": to_unified_neg_bitboard,
-    "valued_attack": to_valued_attack_map,
-    "valued_unified": to_valued_bitboard,
-    "valued_defend": to_valued_defend_map,
-    "white_moving": to_white_moving,
-    "valued_single": get_unified_valued_bitboard,
-}
+from .extractor_factory import ExtractorFactory
 
 
 class ChessTransformer:
     def __init__(self, transformation_type: str) -> None:
         self.transformation_type = transformation_type
-        self.transformation_function = transformation_mapping[transformation_type]
+        self._extractor_factory = ExtractorFactory()
+        self.extractor = self._extractor_factory.create(transformation_type)
 
-    def __call__(self, board: chess.Board, values: dict) -> np.ndarray:
+    def __call__(self, board: chess.Board, values: dict | None = None) -> np.ndarray:
         if isinstance(board, str):
             board = chess.Board(board)
-        return self.transformation_function(board, values)
+        return self.extractor(board, values=values)
 
-    def get_available_transformations(self) -> np.ndarray:
-        return list(transformation_mapping.keys())
+    def get_available_transformations(self) -> list:
+        return list(self._extractor_factory.keys())
